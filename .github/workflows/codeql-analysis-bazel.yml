@@ -18,7 +18,7 @@ jobs:
         language: ['java']
 
     steps:
-    - name: Use bazel
+    - name: Bazel version before
       run: |
         echo "testing bazel version before"
         bazel --version
@@ -28,7 +28,7 @@ jobs:
       with:
         version: 0.23.1
 
-    - name: Use bazel
+    - name: Bazel version after
       run: bazel version
 
     - name: Checkout repository
