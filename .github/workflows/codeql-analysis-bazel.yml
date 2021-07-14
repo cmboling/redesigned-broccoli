@@ -1,0 +1,60 @@
+name: "CodeQL Actions + Bazel"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['java']
+
+    steps:
+    - name: Use bazel
+      run: |
+        echo "testing bazel version before"
+        bazel --version
+
+    - name: Setup Bazel
+      uses: abhinavsingh/setup-bazel@v3
+      with:
+        version: 0.23.1
+
+    - name: Use bazel
+      run: bazel version
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+        queries: security-and-quality
+
+    - name: Build
+      run: |
+        set -x
+        bazel shutdown
+        bazel clean --expunge
+        bazel build --spawn_strategy=local --nouse_action_cache --modify_execution_info MNEMONIC=+no-cache //:app
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+      with:
+        output: code-scanning-results
+
+    - name: Upload SARIF as a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: sarif
+        path: code-scanning-results
+        retention-days: 7

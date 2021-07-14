@@ -1,0 +1,11 @@
+/target
+/codeql-runner
+/.classpath
+/.project
+/.settings
+/.vscode
+.DS_Store
+*.class
+/bazel-*
+/java-database
+/my-basic-queries/.cache

@@ -1,0 +1,5 @@
+disable-default-queries: false
+
+queries:
+  - name: Concat Strings In Java Loops
+    uses: ./my-basic-queries/ConcatenationInLoops.ql
